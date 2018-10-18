@@ -1,0 +1,21 @@
+{
+  "name": "@s-isabella/docker-start",
+  "version": "0.0.0",
+  "description": "Simplifies starting of apps inside docker container",
+  "bin": {
+    "in-tmux": "bin/in-tmux.js",
+    "docker-run": "bin/docker-run.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/isabella.skorepova/docker-start.git"
+  },
+  "author": "Isabella Skořepová <isabella@skorepova.info>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/isabella.skorepova/docker-start/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

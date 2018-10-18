@@ -2,4 +2,4 @@
 
 /* eslint-disable import/no-commonjs */
 
-require('../src/docker-run.js')(process.argv.slice(2))
+require('../lib/docker-run.js')(process.argv.slice(2))

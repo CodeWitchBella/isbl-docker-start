@@ -1,6 +1,6 @@
 {
   "name": "@s-isabella/docker-start",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Simplifies starting of apps inside docker container",
   "bin": {
     "in-tmux": "bin/in-tmux.js",

@@ -1,33 +1,31 @@
 /* eslint-disable import/no-commonjs, no-console */
-const { spawnSync } = require('child_process')
-const path = require('path')
-const fs = require('fs')
+import { spawnSync } from 'child_process'
+import path from 'path'
+import fs from 'fs'
+import packagejson from './package-json'
 
 const colorReset = '\x1b[0m'
 const colorFgRed = '\x1b[31m'
-function logError(...args) {
+export function logError(...args: any[]) {
   process.stderr.write(colorFgRed)
   console.error(...args)
   process.stderr.write(colorReset)
 }
-module.exports.logError = logError
 
-const prefix = require('./package-json').name
-const nodeVersion = require('./package-json').nodeVersion || '10'
+const prefix = packagejson.name
+const nodeVersion = packagejson.nodeVersion || '10'
+
 const image = `node:${nodeVersion}-alpine`
-const packages = (require('./package-json').packages || []).join(' ')
+const packages = (packagejson.packages || []).join(' ')
 
 const dockerContext = path.join(__dirname, '../docker')
 const dockerfilePath = path.join(dockerContext, 'Dockerfile')
 
 function readTemplate() {
-  return fs.readFileSync(
-    dockerfilePath+'.template',
-    'utf-8',
-  )
+  return fs.readFileSync(`${dockerfilePath}.template`, 'utf-8')
 }
 
-function shouldRebuild(template) {
+function shouldRebuild(template: string) {
   console.log('Checking dev image version')
   const { status, stdout, error } = spawnSync(
     'docker',
@@ -37,24 +35,31 @@ function shouldRebuild(template) {
   if (error) logError(error)
   if (status !== 0) return true
 
-  const out = JSON.parse(stdout)
+  const out = JSON.parse(stdout.toString('utf8'))
   if (out.length < 1) return true
-  const nodev = out[0].Config.Env
-    .find(el => /^NODE_VERSION=/.exec(el))
-    .replace('NODE_VERSION=','')
-  const labels = out[0].Config.Labels
+  const config = out[0].Config || out[0].ContainerConfig
+  const nodev = config.Env.find((el: string) =>
+    /^NODE_VERSION=/.exec(el),
+  ).replace('NODE_VERSION=', '')
+  const labels = config.Labels
   if (!labels) return true
-  
-  const requiredv = /LABEL version=([0-9]+)\n/g.exec(template)[1]
-  return requiredv !== labels.version || nodev !== nodeVersion || packages !== labels.packages
+
+  const version = /LABEL version=([0-9]+)\n/g.exec(template)
+  if (version == null) return true
+  const requiredv = version[1]
+  return (
+    requiredv !== labels.version ||
+    nodev !== nodeVersion ||
+    packages !== labels.packages
+  )
 }
 
-function writeDockerfile(template) {
+function writeDockerfile(template: string) {
   fs.writeFileSync(
     dockerfilePath,
     template.replace(/{{image}}/g, image).replace(/{{packages}}/g, packages),
-    'utf-8')
-  
+    'utf-8',
+  )
 }
 
 function rebuild() {
@@ -71,15 +76,15 @@ function rebuild() {
     logError(new Error(`Process exitted with non-zero status code ${status}`))
 }
 
-function mkdir(dir) {
+function mkdir(dir: string) {
   try {
     fs.mkdirSync(path.join(process.cwd(), dir))
-  } catch(e) {
-    if(e.code !== 'EEXIST') throw e
+  } catch (e) {
+    if (e.code !== 'EEXIST') throw e
   }
 }
 
-module.exports.prepare = function prepare() {
+export function prepare() {
   if (console.time) console.time('time')
   const template = readTemplate()
   if (shouldRebuild(template)) {
@@ -96,6 +101,7 @@ module.exports.prepare = function prepare() {
   spawnSync('docker', `network create ${prefix}`.split(' '))
 }
 
+// eslint-disable-next-line global-require
 if (require.main === module) {
-  module.exports.prepare()
+  prepare()
 }

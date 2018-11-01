@@ -1,46 +1,42 @@
 /* eslint-disable import/no-commonjs, no-console */
-const { spawnSync } = require('child_process')
-const path = require('path')
-const fs = require('fs')
-const { logError } = require('./docker-prepare')
+import { spawnSync } from 'child_process'
+import { logError } from './docker-prepare'
+import packagejson from './package-json'
 
-const nodeVersion = require('./package-json').nodeVersion || '10'
+const nodeVersion = packagejson.nodeVersion || '10'
+
 const image = `node:${nodeVersion.split('.')[0]}-alpine`
 
 function pull() {
   console.log('Downloading latest docker image for node')
-  const { status, stdout, error } = spawnSync(
-    'docker',
-    ['pull', image],
-    { stdio: [null, 'pipe', 'pipe'] },
-  )
+  const { status, stdout, error } = spawnSync('docker', ['pull', image], {
+    stdio: [null, 'pipe', 'pipe'],
+  })
   if (error) logError(error)
-  if (status !== 0) return true
+  return status !== 0
 }
 
 function getVersion() {
   console.log('Checking dev image version')
-  const { status, stdout, error } = spawnSync(
-    'docker',
-    ['inspect', image],
-    { stdio: [null, 'pipe', 'inherit'] },
-  )
+  const { status, stdout, error } = spawnSync('docker', ['inspect', image], {
+    stdio: [null, 'pipe', 'inherit'],
+  })
   if (error) logError(error)
   if (status !== 0) return null
 
-  const out = JSON.parse(stdout)
+  const out = JSON.parse(stdout.toString())
   if (out.length < 1) return null
-  return out[0].Config.Env
-    .find(el => /^NODE_VERSION=/.exec(el))
-    .replace('NODE_VERSION=','')
+  return out[0].Config.Env.find((el: string) =>
+    /^NODE_VERSION=/.exec(el),
+  ).replace('NODE_VERSION=', '')
 }
 
-module.exports.checkLatest = function checkLatest() {
+export function checkLatest() {
   pull()
   const latest = getVersion()
-  if(latest === null) return
+  if (latest === null) return
   const series = nodeVersion.split('.')[0]
-  if(latest !== nodeVersion) {
+  if (latest !== nodeVersion) {
     logError(`Specified node version ${nodeVersion} is not latest!`)
     logError(`Latest version in ${series} series is ${latest}`)
   } else {
@@ -50,6 +46,7 @@ module.exports.checkLatest = function checkLatest() {
   }
 }
 
+// eslint-disable-next-line global-require
 if (require.main === module) {
-  module.exports.checkLatest()
+  checkLatest()
 }

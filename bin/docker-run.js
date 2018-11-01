@@ -2,4 +2,9 @@
 
 /* eslint-disable import/no-commonjs */
 
-require('../lib/docker-run.js')(process.argv.slice(2))
+try {
+    require('../build/docker-run.js').default(process.argv.slice(2))
+} catch(e) {
+    require('../build/docker-prepare').logError('message' in e ? e.message : e)
+    process.exitCode = 1
+}

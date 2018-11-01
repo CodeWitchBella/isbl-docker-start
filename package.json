@@ -17,5 +17,16 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@s-isabella/scripts-backend": "^0.1.0"
+  },
+  "dependencies": {
+    "@types/node": "^10.12.1"
+  },
+  "scripts": {
+    "prepare": "isa-scripts-backend build-typedefs",
+    "check": "isa-scripts-backend check",
+    "lint": "isa-scripts-backend lint"
   }
 }

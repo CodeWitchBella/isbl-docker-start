@@ -1,6 +1,6 @@
 {
   "name": "@s-isabella/docker-start",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Simplifies starting of apps inside docker container",
   "bin": {
     "in-tmux": "bin/in-tmux.js",
@@ -19,7 +19,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@s-isabella/scripts-backend": "^0.1.2"
+    "@s-isabella/scripts-backend": "^0.1.3"
   },
   "dependencies": {
     "@types/node": "^10.12.15"

@@ -35,7 +35,7 @@ function alterCmd(cmd: string) {
   const command = parts[0]
   let full = which.sync(command, { nothrow: true }) || command
   if (command === 'npm') {
-    const node = which.sync(command, { nothrow: true })
+    const node = which.sync('node', { nothrow: true })
     const execpath = process.env.npm_execpath
     full = node && execpath ? `${node} ${execpath}` : full
   }

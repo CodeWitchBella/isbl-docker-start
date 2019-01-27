@@ -1,4 +1,5 @@
 import { spawnSync } from 'child_process'
+import which from 'which'
 import { logError } from './docker-prepare'
 import packagejson from './package-json'
 import { checkLatest } from './check-is-latest'
@@ -29,6 +30,13 @@ function run(cmd: string, args: ReadonlyArray<string>) {
   }
 }
 
+function alterCmd(cmd: string) {
+  const parts = cmd.split(' ')
+  const command = parts[0]
+  const full = which.sync(command, { nothrow: true }) || command
+  return full + ' ' + parts.slice(1).join(' ')
+}
+
 type Pane = {
   cmd: string
   dir?: string
@@ -40,7 +48,7 @@ function tmuxPane(pane: Pane) {
   if (pane.dir) {
     args.push(`cd ${pane.dir}`, 'C-m')
   }
-  args.push(pane.cmd, 'C-m', ';')
+  args.push(alterCmd(pane.cmd), 'C-m', ';')
 
   if (pane.name) {
     args.push('rename-window', pane.name, ';')

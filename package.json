@@ -22,7 +22,9 @@
     "@s-isabella/scripts-backend": "^0.1.4"
   },
   "dependencies": {
-    "@types/node": "^10.12.15"
+    "@types/which": "^1.3.1",
+    "@types/node": "^10.12.15",
+    "which": "^1.3.1"
   },
   "scripts": {
     "prepare": "isa-scripts-backend build-typedefs",

@@ -33,7 +33,12 @@ function run(cmd: string, args: ReadonlyArray<string>) {
 function alterCmd(cmd: string) {
   const parts = cmd.split(' ')
   const command = parts[0]
-  const full = which.sync(command, { nothrow: true }) || command
+  let full = which.sync(command, { nothrow: true }) || command
+  if (command === 'npm') {
+    const node = which.sync(command, { nothrow: true })
+    const execpath = process.env.npm_execpath
+    full = node && execpath ? `${node} ${execpath}` : full
+  }
   return full + ' ' + parts.slice(1).join(' ')
 }
 

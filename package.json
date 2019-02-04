@@ -1,5 +1,5 @@
 {
-  "name": "@s-isabella/docker-start",
+  "name": "@codewitchbella/docker-start",
   "version": "0.1.1",
   "description": "Simplifies starting of apps inside docker container",
   "bin": {
@@ -19,7 +19,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@s-isabella/scripts-backend": "^0.1.4"
+    "@codewitchbella/scripts-backend": "^0.1.4"
   },
   "dependencies": {
     "@types/node": "^10.12.15",

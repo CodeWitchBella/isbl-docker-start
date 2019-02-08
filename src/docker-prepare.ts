@@ -13,7 +13,7 @@ export function logError(...args: any[]) {
 }
 
 export function prepare() {
-  const prefix = packagejson.name
+  const prefix = packagejson().name
   const nodeVersion = packagejson().nodeVersion || '10'
 
   const image = `node:${nodeVersion}-alpine`

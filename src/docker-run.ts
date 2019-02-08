@@ -33,7 +33,7 @@ export const dockerRun = () => {
     exit()
   }
   const isPodMan = checkIsPodMan()
-  let prefix = packagejson.name
+  let prefix = packagejson().name
   if (isPodMan) {
     prefix = path.join(process.cwd(), prefix)
   }

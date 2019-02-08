@@ -4,13 +4,11 @@ import readline from 'readline'
 import { spawnSync } from 'child_process'
 import packagejson from './package-json'
 
-const registry = packagejson.registry || 'registry.npmjs.org'
-
 function base64(string: string) {
   return Buffer.from(string).toString('base64')
 }
 
-function getToken(username: string, password: string) {
+function getToken(username: string, password: string, registry: string) {
   return new Promise<{ ok: false } | { ok: true; token: string }>(
     (resolve, reject) => {
       const options = {
@@ -60,7 +58,7 @@ function npmSet(keyval: string) {
   spawnSync('npm', ['set', keyval], { stdio: [null, 'inherit', 'inherit'] })
 }
 
-function writeToken(username: string, token: string) {
+function writeToken(username: string, token: string, registry: string) {
   const keyvals = [
     `//${registry}/:_authToken=${token}`,
     `//${registry}/:always-auth=true`,
@@ -99,6 +97,7 @@ function readLine() {
 
 // start
 ;(async () => {
+  const registry = packagejson().registry || 'registry.npmjs.org'
   try {
     const { username, password } = await getCredentials()
 
@@ -106,13 +105,13 @@ function readLine() {
       console.error('Timeout')
     }, 20000)
 
-    const r = await getToken(username, password)
+    const r = await getToken(username, password, registry)
 
     if (!r.ok) {
       console.error(r)
       process.exit(2)
     } else {
-      writeToken(username, r.token)
+      writeToken(username, r.token, registry)
       process.exit(0)
     }
   } catch (e) {

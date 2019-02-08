@@ -5,27 +5,29 @@ import path from 'path'
 import { logError, prepare } from './docker-prepare'
 import packagejson from './package-json'
 
-const configurations = packagejson.configurations
-
-const confName = process.argv[2]
-const conf = configurations[confName]
-
-function exit() {
-  console.log('npm run docker -- <configuration>')
-  console.log(`Valid configurations: ${Object.keys(configurations).join(', ')}`)
-  process.exit(1)
-}
-
-function checkIsPodMan() {
-  const { status, stdout, error } = spawnSync('docker', ['-v'], {
-    stdio: [null, 'pipe', 'inherit'],
-  })
-  if (error) throw error
-  if (status !== 0) throw new Error('docker -v status code is not 0')
-  return /podman/.exec(stdout.toString())
-}
-
 export const dockerRun = () => {
+  const configurations = packagejson().configurations
+
+  const confName = process.argv[2]
+  const conf = configurations[confName]
+
+  function exit() {
+    console.log('npm run docker -- <configuration>')
+    console.log(
+      `Valid configurations: ${Object.keys(configurations).join(', ')}`,
+    )
+    process.exit(1)
+  }
+
+  function checkIsPodMan() {
+    const { status, stdout, error } = spawnSync('docker', ['-v'], {
+      stdio: [null, 'pipe', 'inherit'],
+    })
+    if (error) throw error
+    if (status !== 0) throw new Error('docker -v status code is not 0')
+    return /podman/.exec(stdout.toString())
+  }
+
   if (!conf) {
     logError('Invalid configuration')
     exit()

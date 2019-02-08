@@ -2,33 +2,39 @@
   "name": "@codewitchbella/docker-start",
   "version": "0.1.2",
   "description": "Simplifies starting of apps inside docker container",
+  "main": "dist/index.js",
+  "umd:main": "dist/inex.umd.js",
+  "module": "dist/index.mjs",
+  "source": "src/index.ts",
   "bin": {
     "in-tmux": "bin/in-tmux.js",
     "docker-run": "bin/docker-run.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/isabella.skorepova/docker-start.git"
+    "url": "https://gitlab.com/codewitchbella/docker-start.git"
   },
   "author": "Isabella Skořepová <isabella@skorepova.info>",
   "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/isabella.skorepova/docker-start/issues"
+    "url": "https://gitlab.com/codewitchbella/docker-start/issues"
   },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
-    "@codewitchbella/scripts-backend": "^0.1.5"
+    "@codewitchbella/scripts-backend": "^0.1.5",
+    "microbundle": "^0.9.0"
   },
   "dependencies": {
-    "@types/node": "^10.12.15",
+    "@types/node": "^10.12.23",
     "@types/which": "^1.3.1",
+    "microbundle": "^0.9.0",
     "which": "^1.3.1"
   },
   "scripts": {
-    "prepare": "isa-scripts-backend build-typedefs",
-    "check": "isa-scripts-backend check",
-    "lint": "isa-scripts-backend lint"
+    "prepare": "microbundle --target node --external child_process,fs,path",
+    "check": "cwb-scripts-backend check",
+    "lint": "cwb-scripts-backend lint"
   }
 }

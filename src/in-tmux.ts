@@ -93,4 +93,4 @@ function runTmuxWithPanes(config: { 'before-all': string[]; panes: Pane[] }) {
   console.log('bye 👋 😸')
 }
 
-export default () => runTmuxWithPanes(conf)
+export const inTmux = () => runTmuxWithPanes(conf)

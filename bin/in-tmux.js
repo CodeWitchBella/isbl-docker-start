@@ -2,4 +2,4 @@
 
 /* eslint-disable import/no-commonjs */
 
-require('../build/in-tmux.js').default(process.argv.slice(2))
+require('..').inTmux(process.argv.slice(2))

@@ -25,7 +25,7 @@ function checkIsPodMan() {
   return /podman/.exec(stdout.toString())
 }
 
-export default () => {
+export const dockerRun = () => {
   if (!conf) {
     logError('Invalid configuration')
     exit()
@@ -120,8 +120,8 @@ export default () => {
       typeof conf.cmd === 'string'
         ? conf.cmd.split(' ')
         : Array.isArray(conf.cmd)
-          ? conf.cmd
-          : [],
+        ? conf.cmd
+        : [],
     )
     .concat(process.argv.slice(3) || [])
   console.log(args)

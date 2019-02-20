@@ -21,7 +21,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@codewitchbella/microbundle": "^0.9.3",
+    "@codewitchbella/microbundle": "^0.9.4",
     "@codewitchbella/scripts-backend": "^0.2.0"
   },
   "dependencies": {

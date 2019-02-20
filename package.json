@@ -3,8 +3,6 @@
   "version": "0.1.6",
   "description": "Simplifies starting of apps inside docker container",
   "main": "dist/index.js",
-  "umd:main": "dist/inex.umd.js",
-  "module": "dist/index.mjs",
   "source": "src/index.ts",
   "bin": {
     "in-tmux": "bin/in-tmux.js",
@@ -24,7 +22,7 @@
   },
   "devDependencies": {
     "@codewitchbella/scripts-backend": "^0.2.0",
-    "@codewitchbella/microbundle": "^0.9.2"
+    "@codewitchbella/microbundle": "^0.9.3"
   },
   "dependencies": {
     "@types/node": "^10.12.23",

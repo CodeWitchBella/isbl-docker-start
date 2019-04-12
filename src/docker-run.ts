@@ -103,7 +103,7 @@ export const dockerRun = () => {
         : [],
     )
     .concat(volume)
-    .concat(process.getuid ? [`--user=${process.getuid()}`] : [])
+    .concat(!process.getuid || conf.image ? [] : [`--user=${process.getuid()}`])
     .concat(process.env.SITE ? ['--env', `SITE=${process.env.SITE}`] : [])
     // pass -t if term is tty
     .concat(process.stdout.isTTY ? ['-t'] : [])

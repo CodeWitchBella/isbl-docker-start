@@ -63,7 +63,7 @@ export function prepare() {
       template
         .replace(/{{image}}/g, image)
         .replace(/{{packages}}/g, packages)
-        .replace(/{{conf}}/g, conf)
+        .replace(/{{conf}}/g, `'${conf}'`)
         .replace(/{{user_id}}/g, userId),
       'utf-8',
     )

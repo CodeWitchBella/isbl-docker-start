@@ -47,7 +47,7 @@ export const dockerRun = () => {
       ? cwd.replace(/^([^:]+):/, '\\$1').replace(/\\/g, '/')
       : cwd
 
-  const virtdir = /\\/.exec(cwd) ? '/app' : cwd
+  const virtdir = '/app'
 
   const { volume = [], chownDir = [] } = (() => {
     if (!conf.volume) return {}
@@ -103,9 +103,7 @@ export const dockerRun = () => {
         : [],
     )
     .concat(volume)
-    .concat(
-      process.getuid ? ['--env', `LOCAL_USER_ID=${process.getuid()}`] : [],
-    )
+    .concat(process.getuid ? [`--user=${process.getuid()}`] : [])
     .concat(process.env.SITE ? ['--env', `SITE=${process.env.SITE}`] : [])
     // pass -t if term is tty
     .concat(process.stdout.isTTY ? ['-t'] : [])
@@ -113,11 +111,7 @@ export const dockerRun = () => {
       process.platform === 'win32' ? ['--env=DOCKER_ON_WINDOWS=true'] : [],
     )
     .concat(['-v', '/var/run/docker.sock:/var/run/docker.sock'])
-    .concat(
-      conf.image
-        ? [conf.image]
-        : [`${prefix}-devel`, virtdir, ...chownDir, '--'],
-    )
+    .concat(conf.image ? [conf.image] : [`${prefix}-devel`])
     .concat(
       typeof conf.cmd === 'string'
         ? conf.cmd.split(' ')

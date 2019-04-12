@@ -26,6 +26,8 @@ export function prepare() {
     return fs.readFileSync(`${dockerfilePath}.template`, 'utf-8')
   }
 
+  const userId = `${(process.getuid && process.getuid()) || 9001}`
+  const conf = JSON.stringify({ image, packages, userId })
   function shouldRebuild(template: string) {
     console.log('Checking dev image version')
     const { status, stdout, error } = spawnSync(
@@ -51,14 +53,18 @@ export function prepare() {
     return (
       requiredv !== labels.version ||
       nodev !== nodeVersion ||
-      packages !== labels.packages
+      conf !== labels.conf
     )
   }
 
   function writeDockerfile(template: string) {
     fs.writeFileSync(
       dockerfilePath,
-      template.replace(/{{image}}/g, image).replace(/{{packages}}/g, packages),
+      template
+        .replace(/{{image}}/g, image)
+        .replace(/{{packages}}/g, packages)
+        .replace(/{{conf}}/g, conf)
+        .replace(/{{user_id}}/g, userId),
       'utf-8',
     )
   }

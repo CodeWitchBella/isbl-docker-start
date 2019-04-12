@@ -1,17 +1,24 @@
 FROM {{image}}
 
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+ENV LANG en_US.UTF-8
+
 # Install native dependencies required for installing backend deps and/or
 # running webpack build. Those are not needed for running the app
 RUN apk add --no-cache libpng-dev autoconf automake libtool file nasm \
   python make g++
 
-ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
-
 RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gosu
 RUN apk add --no-cache tmux bash docker shadow curl
-ENV LANG en_US.UTF-8
+
+ENV HOME /home/user
+
 COPY ./devel-etc /etc
 COPY ./entrypoint.sh /
-LABEL version=11
+LABEL version=12
+
+RUN useradd --shell /bin/bash -u {{user_id}} -o -c "" -d /home/user -m user -k /etc/skel
+RUN mkdir -p /app/frontend/node_modules /app/backend/node_modules && chown -R {{user_id}} /app
+
 RUN apk add --no-cache {{packages}}
-LABEL packages={{packages}}
+LABEL conf={{conf}}

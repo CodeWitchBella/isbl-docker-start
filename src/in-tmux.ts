@@ -24,7 +24,12 @@ export const inTmux = () => {
   }
 
   function run(cmd: string, args: ReadonlyArray<string>) {
+    console.log(
+      '>',
+      [cmd, ...args].map(v => (/ /.test(v) ? `"${v}"` : v)).join(' '),
+    )
     const res = spawnSync(cmd, args, { stdio: 'inherit' })
+
     if (res.status !== 0) {
       console.error(cmd, 'exited with error code', res.status)
       process.exit(0)

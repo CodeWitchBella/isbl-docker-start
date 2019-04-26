@@ -1,6 +1,6 @@
 {
   "name": "@codewitchbella/docker-start",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Simplifies starting of apps inside docker container",
   "main": "dist/index.js",
   "source": "src/index.ts",
@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@codewitchbella/microbundle": "^0.11.1",
-    "@codewitchbella/scripts-backend": "^0.2.1"
+    "@codewitchbella/scripts-backend": "^0.2.2"
   },
   "dependencies": {
     "@types/node": "^11.13.7",

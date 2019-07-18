@@ -5,7 +5,7 @@ ENV LANG en_US.UTF-8
 
 RUN npm i -g full-icu --unsafe-perm=true --allow-root && \
   npm cache clean --force
-ENV NODE_ICU_DATA /usr/local/lib/node_modules/full-icu/icudt62l.dat
+ENV NODE_ICU_DATA /usr/local/lib/node_modules/full-icu
 
 # Install native dependencies required for installing backend deps and/or
 # running webpack build. Those are not needed for running the app

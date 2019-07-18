@@ -19,7 +19,7 @@ ENV HOME /home/user
 
 COPY ./devel-etc /etc
 COPY ./entrypoint.sh /
-LABEL version=13
+LABEL version=14
 
 RUN useradd --shell /bin/bash -u {{user_id}} -o -c "" -d /home/user -m user -k /etc/skel
 RUN mkdir -p /app/frontend/node_modules /app/backend/node_modules && chown -R {{user_id}} /app

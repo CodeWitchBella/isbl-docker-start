@@ -45,7 +45,7 @@ export const inTmux = () => {
       const execpath = process.env.npm_execpath
       full = node && execpath ? `${node} ${execpath}` : full
     }
-    return full + ' ' + parts.slice(1).join(' ')
+    return `${full} ${parts.slice(1).join(' ')}`
   }
 
   type Pane = {

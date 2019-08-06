@@ -73,6 +73,12 @@ export const dockerRun = () => {
     return [`-p=${conf.port}:${conf.port}`]
   }
 
+  const passEnv: string[] = conf['pass-env'] || []
+  if (!Array.isArray(passEnv) || passEnv.some(e => typeof e !== 'string')) {
+    logError('pass-env must be array of strings')
+    process.exit(1)
+  }
+
   const args = [
     'run',
     '-i',
@@ -97,10 +103,14 @@ export const dockerRun = () => {
     .concat(getPort())
     .concat(
       conf.env
-        ? Object.entries(conf.env)
-            .map(([k, v]) => ['--env', `${k}=${v}`])
-            .reduce((a, b) => a.concat(b), [])
+        ? Object.entries(conf.env).map(([k, v]) => `--env=${k}=${v}`)
         : [],
+    )
+    .concat(
+      passEnv
+        .map(k => [k, process.env[k]])
+        .filter(([_, v]) => !!v)
+        .map(([k, v]) => `--env=${k}=${v}`),
     )
     .concat(volume)
     .concat(!process.getuid || conf.image ? [] : [`--user=${process.getuid()}`])

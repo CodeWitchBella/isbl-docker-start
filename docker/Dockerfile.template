@@ -12,14 +12,13 @@ ENV NODE_ICU_DATA /usr/local/lib/node_modules/full-icu
 RUN apk add --no-cache libpng-dev autoconf automake libtool file nasm \
   python make g++
 
-RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gosu
 RUN apk add --no-cache tmux bash docker shadow curl
 
 ENV HOME /home/user
 
 COPY ./devel-etc /etc
 COPY ./entrypoint.sh /
-LABEL version=14
+LABEL version=15
 
 RUN useradd --shell /bin/bash -u {{user_id}} -o -c "" -d /home/user -m user -k /etc/skel
 RUN mkdir -p /app/frontend/node_modules /app/backend/node_modules && chown -R {{user_id}} /app

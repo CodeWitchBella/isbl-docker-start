@@ -2,10 +2,11 @@
 import { spawnSync } from 'child_process'
 import { logError } from './docker-prepare'
 import packagejson from './package-json'
+import { getVariant } from './util'
 
 function pull(image: string) {
   console.log('Downloading latest docker image for node')
-  const { status, stdout, error } = spawnSync('docker', ['pull', image], {
+  const { status, stdout, error } = spawnSync(getVariant(), ['pull', image], {
     stdio: [null, 'pipe', 'pipe'],
   })
   if (error) logError(error)
@@ -14,9 +15,13 @@ function pull(image: string) {
 
 function getVersion(image: string) {
   console.log('Checking dev image version')
-  const { status, stdout, error } = spawnSync('docker', ['inspect', image], {
-    stdio: [null, 'pipe', 'inherit'],
-  })
+  const { status, stdout, error } = spawnSync(
+    getVariant(),
+    ['inspect', image],
+    {
+      stdio: [null, 'pipe', 'inherit'],
+    },
+  )
   if (error) logError(error)
   if (status !== 0) return null
 

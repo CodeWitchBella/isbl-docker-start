@@ -2,8 +2,9 @@
 /* eslint-disable import/no-commonjs, no-console */
 import { spawn, spawnSync } from 'child_process'
 import path from 'path'
-import { logError, prepare, getVariant, getPrefix } from './docker-prepare'
+import { logError, prepare } from './docker-prepare'
 import packagejson from './package-json'
+import { getVariant, getPrefix } from './util'
 
 export const dockerRun = () => {
   const variant = getVariant()

@@ -74,7 +74,7 @@ export const dockerRun = () => {
     '--rm',
     variant === 'podman' ? '--network=host' : `--network=${prefix}`,
     `--name=${prefix}-${confName}`,
-    variant === 'docker' ? '--env=IN_DOCKER=true' : null,
+    variant === 'docker' ? '--env=IN_DOCKER=true' : '',
     `--env=HOST_PATH=${cwd}`,
   ]
     .concat(

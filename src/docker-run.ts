@@ -2,10 +2,11 @@
 /* eslint-disable import/no-commonjs, no-console */
 import { spawn, spawnSync } from 'child_process'
 import path from 'path'
-import { logError, prepare } from './docker-prepare'
+import { logError, prepare, getVariant, getPrefix } from './docker-prepare'
 import packagejson from './package-json'
 
 export const dockerRun = () => {
+  const variant = getVariant()
   const configurations = packagejson().configurations
 
   const confName = process.argv[2]
@@ -19,25 +20,12 @@ export const dockerRun = () => {
     process.exit(1)
   }
 
-  function checkIsPodMan() {
-    const { status, stdout, error } = spawnSync('docker', ['-v'], {
-      stdio: [null, 'pipe', 'inherit'],
-    })
-    if (error) throw error
-    if (status !== 0) throw new Error('docker -v status code is not 0')
-    return /podman/.exec(stdout.toString())
-  }
-
   if (!conf) {
     logError('Invalid configuration')
     exit()
   }
-  const isPodMan = checkIsPodMan()
-  let prefix = packagejson().name
-  if (isPodMan) {
-    prefix = path.join(process.cwd(), prefix)
-  }
-  console.log({ prefix, isPodMan })
+  let prefix = getPrefix()
+  console.log({ prefix })
 
   prepare()
 
@@ -120,7 +108,11 @@ export const dockerRun = () => {
     .concat(
       process.platform === 'win32' ? ['--env=DOCKER_ON_WINDOWS=true'] : [],
     )
-    .concat(['-v', '/var/run/docker.sock:/var/run/docker.sock'])
+    .concat(
+      variant === 'docker'
+        ? ['-v', '/var/run/docker.sock:/var/run/docker.sock']
+        : [],
+    )
     .concat(conf.image ? [conf.image] : [`${prefix}-devel`])
     .concat(
       typeof conf.cmd === 'string'
@@ -133,10 +125,11 @@ export const dockerRun = () => {
   console.log(args)
 
   if (conf.image) {
-    spawnSync('docker', ['pull', conf.image], { stdio: 'inherit' })
+    console.log('Pulling', conf.image)
+    spawnSync(variant, ['pull', conf.image], { stdio: 'inherit' })
   }
 
-  const child = spawn('docker', args, { stdio: 'inherit' })
+  const child = spawn(variant, args, { stdio: 'inherit' })
   child.on('error', err => {
     logError(err)
     process.exit(255)

@@ -4,6 +4,34 @@ import path from 'path'
 import fs from 'fs'
 import packagejson from './package-json'
 
+export const getVariant = (() => {
+  let cache = ''
+  function canUse(ps: string) {
+    const { status } = spawnSync(ps, ['-v'], {
+      stdio: [null, 'pipe', 'inherit'],
+    })
+    if (status !== 0) return false
+    return true
+  }
+  function determine() {
+    if (canUse('docker')) return 'docker'
+    if (canUse('podman')) return 'podman'
+    throw new Error('Found neither podman nor docker')
+  }
+  return () => {
+    if (cache) return cache
+    cache = determine()
+    return cache
+  }
+})()
+
+export function getPrefix() {
+  let { name } = packagejson()
+  name = name.replace(/[^a-zA-Z0-9_.-]/g, '_')
+  if (!/^[a-zA-Z0-9]/.test(name)) return 'a' + name
+  return name
+}
+
 const colorReset = '\x1b[0m'
 const colorFgRed = '\x1b[31m'
 export function logError(...args: any[]) {
@@ -13,7 +41,7 @@ export function logError(...args: any[]) {
 }
 
 export function prepare() {
-  const prefix = packagejson().name
+  const prefix = getPrefix()
   const nodeVersion = packagejson().nodeVersion || '10'
 
   const image = `node:${nodeVersion}-alpine`
@@ -31,7 +59,7 @@ export function prepare() {
   function shouldRebuild(template: string) {
     console.log('Checking dev image version')
     const { status, stdout, error } = spawnSync(
-      'docker',
+      getVariant(),
       ['inspect', `${prefix}-devel`],
       { stdio: [null, 'pipe', 'inherit'] },
     )
@@ -72,7 +100,7 @@ export function prepare() {
   function rebuild() {
     console.log('Rebuilding dev image')
     const { status, error } = spawnSync(
-      'docker',
+      getVariant(),
       `build --rm -f ${dockerfilePath} -t ${prefix}-devel ${dockerContext}`.split(
         ' ',
       ),

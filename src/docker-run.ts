@@ -26,7 +26,7 @@ export const dockerRun = () => {
     exit()
   }
   let prefix = getPrefix()
-  console.log({ prefix })
+  console.log({ prefix, variant })
 
   prepare()
 
@@ -72,7 +72,7 @@ export const dockerRun = () => {
     'run',
     '-i',
     '--rm',
-    `--network=${prefix}`,
+    variant === 'podman' ? '--network=host' : `--network=${prefix}`,
     `--name=${prefix}-${confName}`,
     '--env=IN_DOCKER=true',
     `--env=HOST_PATH=${cwd}`,
@@ -81,7 +81,7 @@ export const dockerRun = () => {
       !conf.image
         ? [
             `-v=${prefix}-home:/home/:rw`,
-            `-v=${cwd}:${virtdir}:z`,
+            `-v=${cwd}:${virtdir}:z,rw`,
             `-v=${prefix}-modules-fe:${virtdir}/frontend/node_modules:rw`,
             `-v=${prefix}-modules-be:${virtdir}/backend/node_modules:rw`,
             `-w=${conf.dir ? path.join(virtdir, conf.dir) : virtdir}`,
@@ -102,7 +102,11 @@ export const dockerRun = () => {
         .map(([k, v]) => `--env=${k}=${v}`),
     )
     .concat(volume)
-    .concat(!process.getuid || conf.image ? [] : [`--user=${process.getuid()}`])
+    .concat(
+      !process.getuid || conf.image || variant === 'podman'
+        ? []
+        : [`--user=${process.getuid()}`],
+    )
     .concat(process.env.SITE ? ['--env', `SITE=${process.env.SITE}`] : [])
     // pass -t if term is tty
     .concat(process.stdout.isTTY ? ['-t'] : [])
@@ -123,6 +127,7 @@ export const dockerRun = () => {
         : [],
     )
     .concat(process.argv.slice(3) || [])
+    .filter(a => !!a)
   console.log(args)
 
   if (conf.image) {

@@ -49,7 +49,7 @@ export const inTmux = () => {
   }
 
   type Pane = {
-    cmd: string
+    cmd: string[]
     dir?: string
     name?: string
   }
@@ -59,7 +59,11 @@ export const inTmux = () => {
     if (pane.dir) {
       args.push(`cd ${pane.dir}`, 'C-m')
     }
-    args.push(alterCmd(pane.cmd), 'C-m', ';')
+    const cmds = Array.isArray(pane.cmd) ? pane.cmd : [pane.cmd]
+    for (const cmd of cmds) {
+      args.push(alterCmd(cmd), 'C-m')
+    }
+    args.push(';')
 
     if (pane.name) {
       args.push('rename-window', pane.name, ';')

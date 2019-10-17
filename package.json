@@ -1,6 +1,6 @@
 {
   "name": "@codewitchbella/docker-start",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Simplifies starting of apps inside docker container",
   "main": "dist/index.js",
   "source": "src/index.ts",

@@ -6,9 +6,13 @@ import { getVariant } from './util'
 
 function pull(image: string) {
   console.log('Downloading latest docker image for node')
-  const { status, stdout, error } = spawnSync(getVariant(), ['pull', image], {
-    stdio: [null, 'pipe', 'pipe'],
-  })
+  const { status, stdout, error } = spawnSync(
+    getVariant().command,
+    ['pull', image],
+    {
+      stdio: [null, 'pipe', 'pipe'],
+    },
+  )
   if (error) logError(error)
   return status !== 0
 }
@@ -16,7 +20,7 @@ function pull(image: string) {
 function getVersion(image: string) {
   console.log('Checking dev image version')
   const { status, stdout, error } = spawnSync(
-    getVariant(),
+    getVariant().command,
     ['inspect', image],
     {
       stdio: [null, 'pipe', 'inherit'],

@@ -32,7 +32,7 @@ export function prepare() {
   function shouldRebuild(template: string) {
     console.log('Checking dev image version')
     const { status, stdout, error } = spawnSync(
-      getVariant(),
+      getVariant().command,
       ['inspect', `${prefix}-devel`],
       { stdio: [null, 'pipe', 'inherit'] },
     )
@@ -73,7 +73,7 @@ export function prepare() {
   function rebuild() {
     console.log('Rebuilding dev image')
     const { status, error } = spawnSync(
-      getVariant(),
+      getVariant().command,
       `build --rm -f ${dockerfilePath} -t ${prefix}-devel ${dockerContext}`.split(
         ' ',
       ),

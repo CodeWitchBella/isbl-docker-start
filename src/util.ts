@@ -1,21 +1,30 @@
 import { spawnSync } from 'child_process'
 import packagejson from './package-json'
 
+type VariantObj = { command: string; variant: 'podman' | 'docker' }
 export const getVariant = (() => {
-  let cache = ''
+  let cache: VariantObj | null = null
   function canUse(ps: string) {
-    const { status } = spawnSync(ps, ['-v'], {
-      stdio: [null, 'pipe', 'inherit'],
+    const { status, stdout } = spawnSync(ps, ['-v'], {
+      stdio: ['pipe', 'pipe', 'inherit'],
     })
     if (status !== 0) return false
-    return true
+    return stdout.toString() || true
   }
-  function determine() {
-    if (canUse('docker')) return 'docker'
-    if (canUse('podman')) return 'podman'
+  function determine(): VariantObj {
+    const docker = canUse('docker')
+    if (docker)
+      return {
+        command: 'docker',
+        variant:
+          typeof docker === 'string' && docker.includes('podman')
+            ? 'podman'
+            : 'docker',
+      }
+    if (canUse('podman')) return { command: 'podman', variant: 'podman' }
     throw new Error('Found neither podman nor docker')
   }
-  return () => {
+  return (): VariantObj => {
     if (cache) return cache
     cache = determine()
     return cache

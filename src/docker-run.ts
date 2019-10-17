@@ -7,7 +7,7 @@ import packagejson from './package-json'
 import { getVariant, getPrefix } from './util'
 
 export const dockerRun = () => {
-  const variant = getVariant()
+  const { variant, command } = getVariant()
   const configurations = packagejson().configurations
 
   const confName = process.argv[2]
@@ -132,10 +132,10 @@ export const dockerRun = () => {
 
   if (conf.image) {
     console.log('Pulling', conf.image)
-    spawnSync(variant, ['pull', conf.image], { stdio: 'inherit' })
+    spawnSync(command, ['pull', conf.image], { stdio: 'inherit' })
   }
 
-  const child = spawn(variant, args, { stdio: 'inherit' })
+  const child = spawn(command, args, { stdio: 'inherit' })
   child.on('error', err => {
     logError(err)
     process.exit(255)

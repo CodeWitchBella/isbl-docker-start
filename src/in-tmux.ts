@@ -1,5 +1,4 @@
 import { spawnSync } from 'child_process'
-import which from 'which'
 import { logError } from './docker-prepare'
 import packagejson from './package-json'
 import { checkLatest } from './check-is-latest'
@@ -36,18 +35,6 @@ export const inTmux = () => {
     }
   }
 
-  function alterCmd(cmd: string) {
-    const parts = cmd.split(' ')
-    const command = parts[0]
-    let full = which.sync(command, { nothrow: true }) || command
-    if (command === 'npm') {
-      const node = which.sync('node', { nothrow: true })
-      const execpath = process.env.npm_execpath
-      full = node && execpath ? `${node} ${execpath}` : full
-    }
-    return `${full} ${parts.slice(1).join(' ')}`
-  }
-
   type Pane = {
     cmd: string[]
     dir?: string
@@ -61,7 +48,7 @@ export const inTmux = () => {
     }
     const cmds = Array.isArray(pane.cmd) ? pane.cmd : [pane.cmd]
     for (const cmd of cmds) {
-      args.push(alterCmd(cmd), 'C-m')
+      args.push(cmd, 'C-m')
     }
     args.push(';')
 

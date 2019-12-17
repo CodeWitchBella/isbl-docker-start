@@ -21,10 +21,11 @@ export const dockerRun = () => {
     process.exit(1)
   }
 
-  if (!conf) {
+  if (!conf || typeof conf !== 'object') {
     logError('Invalid configuration')
     exit()
   }
+  Object.assign(conf, configurations._default || {})
   let prefix = getPrefix()
   console.log({ prefix, variant })
 
@@ -82,8 +83,12 @@ export const dockerRun = () => {
         ? [
             `-v=${prefix}-home:/home/:rw`,
             `-v=${cwd}:${virtdir}:z,rw`,
-            `-v=${prefix}-modules-fe:${virtdir}/frontend/node_modules:rw`,
-            `-v=${prefix}-modules-be:${virtdir}/backend/node_modules:rw`,
+            ...(conf['mount-modules'] !== false
+              ? [
+                  `-v=${prefix}-modules-fe:${virtdir}/frontend/node_modules:rw`,
+                  `-v=${prefix}-modules-be:${virtdir}/backend/node_modules:rw`,
+                ]
+              : []),
             `-w=${conf.dir ? path.join(virtdir, conf.dir) : virtdir}`,
           ]
         : [],

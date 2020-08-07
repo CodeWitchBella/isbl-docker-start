@@ -64,7 +64,7 @@ export const dockerRun = () => {
   }
 
   const passEnv: string[] = conf['pass-env'] || []
-  if (!Array.isArray(passEnv) || passEnv.some(e => typeof e !== 'string')) {
+  if (!Array.isArray(passEnv) || passEnv.some((e) => typeof e !== 'string')) {
     logError('pass-env must be array of strings')
     process.exit(1)
   }
@@ -102,7 +102,7 @@ export const dockerRun = () => {
     )
     .concat(
       passEnv
-        .map(k => [k, process.env[k]])
+        .map((k) => [k, process.env[k]])
         .filter(([_, v]) => !!v)
         .map(([k, v]) => `--env=${k}=${v}`),
     )
@@ -132,7 +132,7 @@ export const dockerRun = () => {
         : [],
     )
     .concat(process.argv.slice(3) || [])
-    .filter(a => !!a)
+    .filter((a) => !!a)
   console.log(args)
 
   if (conf.image) {
@@ -141,7 +141,7 @@ export const dockerRun = () => {
   }
 
   const child = spawn(command, args, { stdio: 'inherit' })
-  child.on('error', err => {
+  child.on('error', (err) => {
     logError(err)
     process.exit(255)
   })

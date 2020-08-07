@@ -27,11 +27,11 @@ function getToken(username: string, password: string, registry: string) {
 
       let result = ''
 
-      const req = https.request(options, res => {
+      const req = https.request(options, (res) => {
         console.log(`STATUS: ${res.statusCode}`)
         console.log(`HEADERS: ${JSON.stringify(res.headers)}`)
         res.setEncoding('utf8')
-        res.on('data', chunk => {
+        res.on('data', (chunk) => {
           result += chunk
         })
         res.on('end', () => {
@@ -43,7 +43,7 @@ function getToken(username: string, password: string, registry: string) {
         })
       })
 
-      req.on('error', e => {
+      req.on('error', (e) => {
         reject(e)
       })
 

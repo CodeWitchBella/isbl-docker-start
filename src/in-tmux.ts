@@ -12,7 +12,7 @@ export const inTmux = () => {
     console.log('npm run tmux -- <configuration>')
     console.log(
       `Valid configurations: ${Object.keys(tmux)
-        .filter(c => !/^hooks?-/.exec(c))
+        .filter((c) => !/^hooks?-/.exec(c))
         .join(', ')}`,
     )
     process.exit(1)
@@ -25,7 +25,7 @@ export const inTmux = () => {
   function run(cmd: string, args: ReadonlyArray<string>) {
     console.log(
       '>',
-      [cmd, ...args].map(v => (/ /.test(v) ? `"${v}"` : v)).join(' '),
+      [cmd, ...args].map((v) => (/ /.test(v) ? `"${v}"` : v)).join(' '),
     )
     const res = spawnSync(cmd, args, { stdio: 'inherit' })
 

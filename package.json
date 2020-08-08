@@ -25,7 +25,7 @@
     "@codewitchbella/scripts-backend": "^0.2.4"
   },
   "dependencies": {
-    "@types/node": "^12.12.17"
+    "@types/node": "^14.0.27"
   },
   "scripts": {
     "prepare": "microbundle --target node",

@@ -1,6 +1,6 @@
 {
-  "name": "@codewitchbella/docker-start",
-  "version": "0.6.0",
+  "name": "@isbl/docker-start",
+  "version": "0.7.0",
   "description": "Simplifies starting of apps inside docker container",
   "main": "dist/index.js",
   "source": "src/index.ts",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/codewitchbella/docker-start.git"
+    "url": "https://github.com/CodeWitchBella/isbl-docker-start.git"
   },
   "author": "Isabella Skořepová <isabella@skorepova.info>",
   "license": "MIT",
@@ -22,14 +22,17 @@
   },
   "devDependencies": {
     "@codewitchbella/microbundle": "^0.11.1",
-    "@codewitchbella/scripts-backend": "^0.3.0"
+    "@codewitchbella/scripts-backend": "^0.3.0",
+    "@isbl/publisher": "^0.4.1"
   },
   "dependencies": {
-    "@types/node": "^14.0.27"
+    "@types/node": "^14.14.37"
   },
   "scripts": {
     "prepare": "microbundle --target node",
     "check": "cwb-scripts-backend check",
-    "lint": "cwb-scripts-backend lint"
+    "lint": "cwb-scripts-backend lint",
+    "prepublishOnly": "isbl-publisher prepublishOnly",
+    "publish:npm": "yarn prepare && isbl-publisher publish"
   }
 }

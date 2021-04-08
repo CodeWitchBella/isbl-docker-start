@@ -6,7 +6,7 @@
   "source": "src/index.ts",
   "bin": {
     "in-tmux": "bin/in-tmux.js",
-    "docker-run": "bin/docker-run.js"
+    "docker-start": "bin/docker-start.js"
   },
   "repository": {
     "type": "git",

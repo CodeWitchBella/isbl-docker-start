@@ -1,6 +1,6 @@
 {
   "name": "@isbl/docker-start",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Simplifies starting of apps inside docker container",
   "main": "dist/index.js",
   "source": "src/index.ts",

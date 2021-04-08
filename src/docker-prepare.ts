@@ -17,7 +17,7 @@ export function prepare() {
   const prefix = getPrefix()
   const nodeVersion = packagejson().nodeVersion || '10'
 
-  const image = `node:${nodeVersion}-alpine`
+  const image = `docker.io/library/node:${nodeVersion}-alpine`
   const packages = (packagejson().packages || []).join(' ')
 
   const dockerContext = path.join(__dirname, '../docker')

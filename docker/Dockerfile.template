@@ -10,7 +10,7 @@ ENV NODE_ICU_DATA /usr/local/lib/node_modules/full-icu
 # Install native dependencies required for installing backend deps and/or
 # running webpack build. Those are not needed for running the app
 RUN apk add --no-cache libpng-dev autoconf automake libtool file nasm \
-  python make g++
+  python3 make g++
 
 RUN apk add --no-cache tmux bash docker shadow curl
 
@@ -18,7 +18,7 @@ ENV HOME /home/user
 
 COPY ./devel-etc /etc
 COPY ./entrypoint.sh /
-LABEL version=15
+LABEL version=16
 
 RUN useradd --shell /bin/bash -u {{user_id}} -o -c "" -d /home/user -m user -k /etc/skel
 RUN mkdir -p /app/frontend/node_modules /app/backend/node_modules && chown -R {{user_id}} /app

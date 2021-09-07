@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
-/* eslint-disable import/no-commonjs */
-
-require('..').inTmux(process.argv.slice(2))
+#!/usr/bin/env -S node --enable-source-maps
+import * as pkg from '../dist/docker-start.esm.js'
+pkg.inTmux(process.argv.slice(2))

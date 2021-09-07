@@ -1,10 +1,9 @@
-#!/usr/bin/env node
-
-/* eslint-disable import/no-commonjs */
+#!/usr/bin/env -S node --enable-source-maps
+import * as pkg from '../dist/docker-start.esm.js'
 
 try {
-  require('../dist').dockerRun(process.argv.slice(2))
+  pkg.dockerRun(process.argv.slice(2))
 } catch (e) {
-  require('../dist').logError('message' in e ? e.message : e)
+  pkg.logError('message' in e ? e.message : e)
   process.exitCode = 1
 }

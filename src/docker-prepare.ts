@@ -87,7 +87,7 @@ export function prepare() {
   function mkdir(dir: string) {
     try {
       fs.mkdirSync(path.join(process.cwd(), dir))
-    } catch (e) {
+    } catch (e: any) {
       if (e.code !== 'EEXIST') throw e
     }
   }
@@ -106,9 +106,4 @@ export function prepare() {
   mkdir('backend/node_modules')
 
   spawnSync('docker', `network create ${prefix}`.split(' '))
-}
-
-// eslint-disable-next-line global-require
-if (require.main === module) {
-  prepare()
 }

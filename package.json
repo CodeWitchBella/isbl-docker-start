@@ -1,9 +1,8 @@
 {
   "name": "@isbl/docker-start",
-  "version": "0.11.0",
+  "version": "0.12.0-beta.1",
   "description": "Simplifies starting of apps inside docker container",
-  "main": "dist/index.js",
-  "source": "src/index.ts",
+  "exports": "./dist/docker-start.esm.js",
   "bin": {
     "in-tmux": "bin/in-tmux.js",
     "docker-start": "bin/docker-start.js"
@@ -17,16 +16,17 @@
   "publishConfig": {
     "access": "public"
   },
+  "type": "module",
   "devDependencies": {
-    "@codewitchbella/microbundle": "^0.11.1",
-    "@codewitchbella/scripts-backend": "^0.3.0",
     "@isbl/publisher": "^0.7.1",
-    "@types/node": "^16.6.1"
+    "@types/node": "^16.6.1",
+    "microbundle": "^0.13.3"
+  },
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
   },
   "scripts": {
-    "prepare": "microbundle --target node",
-    "check": "cwb-scripts-backend check",
-    "lint": "cwb-scripts-backend lint",
+    "prepare": "microbundle --target node -f esm",
     "prepublishOnly": "isbl-publisher prepublishOnly",
     "publish:npm": "isbl-publisher publish --no-draft"
   }

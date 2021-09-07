@@ -1,15 +1,15 @@
 import { spawnSync } from 'child_process'
 import { logError } from './docker-prepare'
-import packagejson from './package-json'
+import packagejson, { isYarn } from './package-json'
 import { checkLatest } from './check-is-latest'
 
 export const inTmux = () => {
   const { tmux } = packagejson()
   const confName = process.argv[2]
-  const conf = tmux[confName]
 
   function exit() {
-    console.log('npm run tmux -- <configuration>')
+    if (isYarn()) console.log('yarn tmux <configuration>')
+    else console.log('npm run tmux -- <configuration>')
     console.log(
       `Valid configurations: ${Object.keys(tmux)
         .filter((c) => !/^hooks?-/.exec(c))
@@ -17,9 +17,16 @@ export const inTmux = () => {
     )
     process.exit(1)
   }
+  if (!tmux) {
+    logError('Missing tmux key in package.json')
+    exit()
+    return
+  }
+  const conf = tmux[confName || '']
   if (!conf) {
     logError('Invalid configuration')
     exit()
+    return
   }
 
   function run(cmd: string, args: ReadonlyArray<string>) {

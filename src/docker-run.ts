@@ -11,7 +11,7 @@ export const dockerRun = () => {
   const configurations = packagejson().configurations
 
   const confName = process.argv[2]
-  const conf = configurations[confName]
+  const conf = configurations[confName || '']
 
   function exit() {
     console.log('npm run docker -- <configuration>')

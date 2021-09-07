@@ -72,8 +72,8 @@ function writeToken(username: string, token: string, registry: string) {
 async function getCredentials() {
   if (process.argv.length >= 4) {
     return {
-      username: process.argv[2],
-      password: process.argv[3],
+      username: process.argv[2] || '',
+      password: process.argv[3] || '',
     }
   }
   console.log('Username: ')

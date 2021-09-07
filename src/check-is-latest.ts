@@ -53,8 +53,3 @@ export function checkLatest() {
     process.stderr.write('\x1b[0m')
   }
 }
-
-// eslint-disable-next-line global-require
-if (require.main === module) {
-  checkLatest()
-}

@@ -1,12 +1,17 @@
 {
   "name": "@isbl/docker-start",
-  "version": "0.12.0-beta.2",
+  "version": "0.12.0-beta.3",
   "description": "Simplifies starting of apps inside docker container",
   "exports": "./dist/docker-start.esm.js",
   "bin": {
     "in-tmux": "bin/in-tmux.js",
     "docker-start": "bin/docker-start.js"
   },
+  "files": [
+    "docker",
+    "bin",
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/CodeWitchBella/isbl-docker-start.git"

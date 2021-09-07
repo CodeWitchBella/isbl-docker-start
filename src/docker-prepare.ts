@@ -20,8 +20,9 @@ export function prepare() {
   const image = `docker.io/library/node:${nodeVersion}-alpine`
   const packages = (packagejson().packages || []).join(' ')
 
-  const dockerContext = path.join(__dirname, '../docker')
+  const dockerContext = new URL('../docker', import.meta.url).pathname
   const dockerfilePath = path.join(dockerContext, 'Dockerfile')
+  console.log(dockerfilePath)
 
   function readTemplate() {
     return fs.readFileSync(`${dockerfilePath}.template`, 'utf-8')

@@ -1,6 +1,6 @@
 {
   "name": "@isbl/docker-start",
-  "version": "0.12.0-beta.1",
+  "version": "0.12.0-beta.2",
   "description": "Simplifies starting of apps inside docker container",
   "exports": "./dist/docker-start.esm.js",
   "bin": {
